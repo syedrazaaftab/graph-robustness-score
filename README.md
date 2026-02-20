@@ -18,3 +18,10 @@ C(G) = w₁·spectral gap − w₂·singular-value variance + w₃·average Olli
 **Try it now**
 ```bash
 python notebooks/exploratory.py
+
+Commercial use & consulting available
+Supply-chain resilience • Fraud detection • Molecular graphs • Cybersecurity • IT networks
+→ Book a free 15-min call or email: syedrazaaftab@gmail.com
+Paper (Feb 19, 2026) is inside the ZIP.
+
+Made with ❤️ by Syed Raza Aftab
