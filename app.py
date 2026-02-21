@@ -7,9 +7,9 @@ from io import StringIO
 # Real Ollivier-Ricci
 try:
     from GraphRicciCurvature.OllivierRicci import OllivierRicci
-    REAL_CURVATURE = True
+    REAL_CURVATURE_AVAILABLE = True
 except ImportError:
-    REAL_CURVATURE = False
+    REAL_CURVATURE_AVAILABLE = False
 
 st.set_page_config(page_title="Graph Robustness Score", page_icon="🧠", layout="centered")
 
@@ -63,13 +63,13 @@ w1 = c1.slider("Spectral gap (w₁)", 0.0, 3.0, 1.0, 0.1)
 w2 = c2.slider("Variance penalty (w₂)", 0.0, 3.0, 1.0, 0.1)
 w3 = c3.slider("Curvature (w₃)", 0.0, 3.0, 1.0, 0.1)
 
-# ====================== COMPUTE ======================
+# ====================== COMPUTE C(G) ======================
 A = nx.to_numpy_array(G)
 ev = np.linalg.eigvals(A)
 delta = np.max(np.real(ev)) - (sorted(np.real(ev), reverse=True)[1] if len(ev) > 1 else 0)
 var_sigma = np.var(np.linalg.svd(A, compute_uv=False))
 
-if REAL_CURVATURE and G.number_of_edges() > 0:
+if REAL_CURVATURE_AVAILABLE and G.number_of_edges() > 0:
     with st.spinner("Computing real Ollivier–Ricci curvature..."):
         orc = OllivierRicci(G, alpha=0.5, method="Sinkhorn", verbose="ERROR")
         orc.compute_ricci_curvature()
@@ -108,7 +108,7 @@ if st.button("Remove 20% hub edges"):
     st.session_state.G_hub = Gh
     st.success("Hub attack done")
 
-# ====================== PLOT (dynamic - only shows run attacks) ======================
+# ====================== PLOT (dynamic) ======================
 if 'G_random' in st.session_state or 'G_hub' in st.session_state:
     st.subheader("Robustness Drop Under Attack")
     labels = ["Original"]
@@ -121,7 +121,7 @@ if 'G_random' in st.session_state or 'G_hub' in st.session_state:
             Aa = nx.to_numpy_array(Ga)
             da = np.max(np.real(np.linalg.eigvals(Aa))) - (sorted(np.real(np.linalg.eigvals(Aa)), reverse=True)[1] if len(Aa) > 1 else 0)
             va = np.var(np.linalg.svd(Aa, compute_uv=False))
-            if REAL_CURVATURE and Ga.number_of_edges() > 0:
+            if REAL_CURVATURE_AVAILABLE and Ga.number_of_edges() > 0:
                 orca = OllivierRicci(Ga, alpha=0.5, method="Sinkhorn", verbose="ERROR")
                 orca.compute_ricci_curvature()
                 ka = np.mean(list(nx.get_edge_attributes(orca.G, "ricciCurvature").values()))
