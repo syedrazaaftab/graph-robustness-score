@@ -7,6 +7,8 @@
 
 **Live Demo** • [Paper (Feb 19, 2026)](https://github.com/syedrazaaftab/graph-robustness-score/raw/main/Graph_Robustness_Paper.pdf) • [Full package + experiments](computational-testbed.zip)
 
+![Graph Robustness Score Demo](https://github.com/syedrazaaftab/graph-robustness-score/raw/main/IMG_4838.jpeg)
+
 I offer **paid network robustness audits** (supply-chain, transaction graphs, biotech interaction networks, cyber attack surfaces).  
 First 3 clients this month get **30% off**.
 
