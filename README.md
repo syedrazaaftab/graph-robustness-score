@@ -1,15 +1,14 @@
 # Graph Robustness Score C(G)
 
-**One clean number that tells you how robust any network is.**
+[![Try it live](https://img.shields.io/badge/Try%20it%20live-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://graph-robustness-score.streamlit.app)
 
-C(G) = w₁·spectral gap − w₂·singular-value variance + w₃·average Ollivier–Ricci curvature
+**One clean number** that tells you how robust any network is.  
+**Spectral gap − singular-value variance + real Ollivier–Ricci curvature**
 
----
+**Live Demo** • [Paper (Feb 19, 2026)](Complexity_Functionals_on_Sparse_Random_Graphs.pdf) • [Full package + experiments](computational-testbed.zip)
 
-### 🎯 Live Demo (try it now — no install needed)
-**[🧠 Open the web demo](https://graph-robustness-score.streamlit.app)**
-
-Upload any edgelist CSV or click “Try sample graph” to see your score instantly.
+I offer **paid network robustness audits** (supply-chain, transaction graphs, biotech, cyber).  
+First 3 clients this month get **30% off**.
 
 ---
 
