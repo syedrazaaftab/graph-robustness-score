@@ -63,7 +63,7 @@ w1 = c1.slider("Spectral gap (w₁)", 0.0, 3.0, 1.0, 0.1)
 w2 = c2.slider("Variance penalty (w₂)", 0.0, 3.0, 1.0, 0.1)
 w3 = c3.slider("Curvature (w₃)", 0.0, 3.0, 1.0, 0.1)
 
-# ====================== COMPUTE C(G) ======================
+# ====================== COMPUTE ======================
 A = nx.to_numpy_array(G)
 ev = np.linalg.eigvals(A)
 delta = np.max(np.real(ev)) - (sorted(np.real(ev), reverse=True)[1] if len(ev) > 1 else 0)
@@ -85,7 +85,7 @@ col1.metric("Spectral Gap Δλ", f"{delta:.4f}")
 col2.metric("Singular-Value Var", f"{var_sigma:.4f}")
 col3.metric("Avg Ollivier–Ricci κ", f"{kappa:.4f}")
 
-# ====================== ATTACK SIMULATION (separate keys) ======================
+# ====================== ATTACK SIMULATION (fixed) ======================
 st.subheader("Attack Simulation")
 if st.button("Remove 20% random edges"):
     Gr = G.copy()
@@ -108,7 +108,7 @@ if st.button("Remove 20% hub edges"):
     st.session_state.G_hub = Gh
     st.success("Hub attack done")
 
-# ====================== PLOT (dynamic - only shows attacks that were run) ======================
+# ====================== PLOT (dynamic - only shows run attacks) ======================
 if 'G_random' in st.session_state or 'G_hub' in st.session_state:
     st.subheader("Robustness Drop Under Attack")
     labels = ["Original"]
@@ -139,7 +139,7 @@ if 'G_random' in st.session_state or 'G_hub' in st.session_state:
     ax.grid(axis="y", alpha=0.3)
     st.pyplot(fig)
 
-st.info("📦 Full reproducible package (paper + N=800 experiments) → [Download ZIP](https://github.com/syedrazaaftab/graph-robustness-score/raw/main/computational-testbed.zip)")
+st.info("📦 Full reproducible package (paper + experiments) → [Download ZIP](https://github.com/syedrazaaftab/graph-robustness-score/raw/main/computational-testbed.zip)")
 
 st.caption("Built by Syed Raza Aftab • Princeton Meadows, NJ\n"
            "Paid network robustness audits available — email: aftab011190@gmail.com")
