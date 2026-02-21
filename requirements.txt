@@ -1,5 +1,6 @@
 streamlit
 networkx
 numpy
-scipy
 matplotlib
+scipy
+GraphRicciCurvature
