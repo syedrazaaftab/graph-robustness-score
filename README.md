@@ -54,7 +54,7 @@ I offer paid network robustness audits (5–7 business days):
 •  Molecular / protein interaction robustness
 •  Cybersecurity attack-surface scoring
 First 3 clients this month get 30% off + free 30-min call.
-Email: syedrazaaftab@gmail.com
+Email: aftab011190@gmail.com
 or book a free 15-min discovery call (Calendly link coming soon)
 
 Made with ❤️ by Syed Raza Aftab
