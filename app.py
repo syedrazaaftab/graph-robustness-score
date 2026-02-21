@@ -23,7 +23,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     if st.button("Try triangle (3 nodes)", use_container_width=True):
-        sample_csv = "1,2\n1,3\n2,3"          # ← NO HEADER (this was the bug)
+        sample_csv = "1,2\n1,3\n2,3"
         G = nx.read_edgelist(StringIO(sample_csv), delimiter=",", nodetype=int)
         st.session_state.G = G
         st.success("✅ Triangle graph loaded! (3 nodes, 3 edges)")
@@ -44,21 +44,16 @@ uploaded_file = st.file_uploader(
 if uploaded_file is not None:
     content = uploaded_file.read().decode("utf-8").strip()
     lines = content.splitlines()
-    
-    # Auto-skip header if it looks like one
     if lines and any(x in lines[0].lower() for x in ["source", "target", "from", "to", "node"]):
         lines = lines[1:]
-    
     clean_csv = "\n".join(lines)
-    
     try:
         G = nx.read_edgelist(StringIO(clean_csv), delimiter=",", nodetype=int)
         st.session_state.G = G
         st.success(f"✅ Upload successful: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
     except Exception as e:
-        st.error(f"Could not parse CSV. Make sure it's a simple edgelist (one edge per line). Error: {e}")
+        st.error(f"Could not parse CSV: {e}")
 
-# Load from session or stop
 if 'G' not in st.session_state:
     st.info("👆 Click a sample button or upload a CSV to begin")
     st.stop()
@@ -68,7 +63,8 @@ G = st.session_state.G
 # ====================== COMPUTE C(G) ======================
 st.success(f"Graph ready: **{G.number_of_nodes()} nodes**, **{G.number_of_edges()} edges**")
 
-A = nx.adjacency_matrix(G).todense()
+# FIXED: Use pure-numpy version (no scipy needed)
+A = nx.to_numpy_array(G)                    # ← THIS WAS THE FIX
 ev = np.linalg.eigvals(A)
 lambda_max = np.max(np.real(ev))
 lambda_next = sorted(np.real(ev), reverse=True)[1] if len(ev) > 1 else 0
@@ -76,9 +72,9 @@ delta = lambda_max - lambda_next
 
 sigma = np.linalg.svd(A, compute_uv=False)
 var_sigma = np.var(sigma)
-kappa_approx = nx.average_clustering(G)   # demo approximation (full OR in the ZIP)
+kappa_approx = nx.average_clustering(G)     # demo approximation
 
-C = delta - var_sigma + kappa_approx * 10   # scaled for visibility in demo
+C = delta - var_sigma + kappa_approx * 10   # scaled for visibility
 
 st.metric("**Your C(G) Score**", f"{C:.3f}")
 
@@ -106,7 +102,7 @@ if st.button("Remove 20% highest-degree (hub) edges"):
     sorted_nodes = sorted(degree, key=degree.get, reverse=True)
     remove_count = max(1, int(0.2 * G_hub.number_of_edges()))
     edges_to_remove = []
-    for node in sorted_nodes[:remove_count]:  # simpler & safer
+    for node in sorted_nodes:
         for neigh in list(G_hub.neighbors(node)):
             if len(edges_to_remove) < remove_count:
                 edges_to_remove.append((node, neigh))
@@ -114,10 +110,9 @@ if st.button("Remove 20% highest-degree (hub) edges"):
     st.session_state.G_attack = G_hub
     st.success("20% hub-targeted edges removed")
 
-# Show results if attack ran
 if 'G_attack' in st.session_state:
     G_attack = st.session_state.G_attack
-    A2 = nx.adjacency_matrix(G_attack).todense()
+    A2 = nx.to_numpy_array(G_attack)        # ← FIXED HERE TOO
     ev2 = np.linalg.eigvals(A2)
     d2 = np.max(np.real(ev2)) - (sorted(np.real(ev2), reverse=True)[1] if len(ev2) > 1 else 0)
     v2 = np.var(np.linalg.svd(A2, compute_uv=False))
@@ -134,9 +129,9 @@ if 'G_attack' in st.session_state:
     ax.grid(axis='y', alpha=0.3)
     st.pyplot(fig)
 
-st.info("📦 **Full version** (exact Ollivier–Ricci, weight sliders, large-N examples) is in the ZIP download below.")
+st.info("📦 **Full version** (exact Ollivier–Ricci + weight sliders) is in the ZIP below.")
 
 st.markdown("[⬇️ Download full package + paper + code](https://github.com/syedrazaaftab/graph-robustness-score/raw/main/computational-testbed.zip)")
 
 st.caption("Built with C(G) by Syed Raza Aftab • Princeton Meadows, NJ  \n"
-           "Email for paid audits / custom implementations: aftab011190@gmail.com")
+           "Email for paid audits: aftab011190@gmail.com")
