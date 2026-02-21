@@ -19,21 +19,40 @@ st.markdown("""
 Spectral gap − singular-value variance + Ollivier–Ricci curvature
 """)
 
-# ====================== SAMPLE GRAPHS ======================
+# ====================== SAMPLE GRAPHS (5 options) ======================
 st.subheader("Try sample graphs")
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("Try triangle (3 nodes)", use_container_width=True):
         G = nx.complete_graph(3)
         st.session_state.G = G
-        st.success("✅ Triangle loaded (3 nodes, 3 edges)")
+        st.success("✅ Triangle loaded")
 
 with col2:
     if st.button("Try scale-free (50 nodes)", use_container_width=True):
         G = nx.barabasi_albert_graph(50, 3, seed=42)
         st.session_state.G = G
-        st.success("✅ Scale-free network loaded")
+        st.success("✅ Scale-free loaded")
+
+with col3:
+    if st.button("Try cycle C5", use_container_width=True):
+        G = nx.cycle_graph(5)
+        st.session_state.G = G
+        st.success("✅ Cycle C5 loaded")
+
+col4, col5 = st.columns(2)
+with col4:
+    if st.button("Try complete K4", use_container_width=True):
+        G = nx.complete_graph(4)
+        st.session_state.G = G
+        st.success("✅ Complete K4 loaded")
+
+with col5:
+    if st.button("Try Karate Club", use_container_width=True):
+        G = nx.karate_club_graph()
+        st.session_state.G = G
+        st.success("✅ Karate Club loaded")
 
 # ====================== UPLOAD ======================
 st.subheader("Or upload your own edgelist")
@@ -63,7 +82,7 @@ w1 = c1.slider("Spectral gap (w₁)", 0.0, 3.0, 1.0, 0.1)
 w2 = c2.slider("Variance penalty (w₂)", 0.0, 3.0, 1.0, 0.1)
 w3 = c3.slider("Curvature (w₃)", 0.0, 3.0, 1.0, 0.1)
 
-# ====================== COMPUTE C(G) + INTERPRETATION ======================
+# ====================== COMPUTE + INTERPRETATION ======================
 A = nx.to_numpy_array(G)
 ev = np.linalg.eigvals(A)
 delta = np.max(np.real(ev)) - (sorted(np.real(ev), reverse=True)[1] if len(ev) > 1 else 0)
@@ -81,15 +100,15 @@ C = w1 * delta - w2 * var_sigma + w3 * kappa
 
 st.metric("**C(G) Score**", f"{C:.4f}")
 
-# Interpretation (very important for users)
+# Interpretation
 if C > 3.0:
-    st.success("✅ **Strong robustness** — this graph is resilient to both random and targeted failures.")
+    st.success("✅ **Strong robustness** — resilient to both random and targeted failures.")
 elif C > 1.5:
-    st.info("⚠️ **Moderate robustness** — decent connectivity but vulnerable to hub attacks.")
+    st.info("⚠️ **Moderate robustness** — decent connectivity but vulnerable to hubs.")
 else:
     st.warning("🔴 **Low robustness** — consider adding edges or reducing centralization.")
 
-st.caption("Higher is better. Compare to random graphs of similar size for context.")
+st.caption("Typical scores: Triangle ≈ 3.5 | Scale-free ≈ 1.5–2.5 | Random ER ≈ 0.5–1.5. Higher is better.")
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Spectral Gap Δλ", f"{delta:.4f}")
