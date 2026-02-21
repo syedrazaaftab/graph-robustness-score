@@ -63,7 +63,7 @@ w1 = c1.slider("Spectral gap (w₁)", 0.0, 3.0, 1.0, 0.1)
 w2 = c2.slider("Variance penalty (w₂)", 0.0, 3.0, 1.0, 0.1)
 w3 = c3.slider("Curvature (w₃)", 0.0, 3.0, 1.0, 0.1)
 
-# ====================== COMPUTE C(G) ======================
+# ====================== COMPUTE C(G) + INTERPRETATION ======================
 A = nx.to_numpy_array(G)
 ev = np.linalg.eigvals(A)
 delta = np.max(np.real(ev)) - (sorted(np.real(ev), reverse=True)[1] if len(ev) > 1 else 0)
@@ -80,12 +80,30 @@ else:
 C = w1 * delta - w2 * var_sigma + w3 * kappa
 
 st.metric("**C(G) Score**", f"{C:.4f}")
+
+# Interpretation (very important for users)
+if C > 3.0:
+    st.success("✅ **Strong robustness** — this graph is resilient to both random and targeted failures.")
+elif C > 1.5:
+    st.info("⚠️ **Moderate robustness** — decent connectivity but vulnerable to hub attacks.")
+else:
+    st.warning("🔴 **Low robustness** — consider adding edges or reducing centralization.")
+
+st.caption("Higher is better. Compare to random graphs of similar size for context.")
+
 col1, col2, col3 = st.columns(3)
 col1.metric("Spectral Gap Δλ", f"{delta:.4f}")
 col2.metric("Singular-Value Var", f"{var_sigma:.4f}")
 col3.metric("Avg Ollivier–Ricci κ", f"{kappa:.4f}")
 
-# ====================== ATTACK SIMULATION (fixed) ======================
+# Reset button
+if st.button("🔄 Reset graph and attacks", use_container_width=True):
+    for key in list(st.session_state.keys()):
+        if key.startswith("G_"):
+            del st.session_state[key]
+    st.rerun()
+
+# ====================== ATTACK SIMULATION ======================
 st.subheader("Attack Simulation")
 if st.button("Remove 20% random edges"):
     Gr = G.copy()
@@ -108,7 +126,7 @@ if st.button("Remove 20% hub edges"):
     st.session_state.G_hub = Gh
     st.success("Hub attack done")
 
-# ====================== PLOT (dynamic) ======================
+# ====================== PLOT ======================
 if 'G_random' in st.session_state or 'G_hub' in st.session_state:
     st.subheader("Robustness Drop Under Attack")
     labels = ["Original"]
