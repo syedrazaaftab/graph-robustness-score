@@ -44,6 +44,22 @@ Quick rules of thumb:
 •  Biological / molecular graphs → increase w₃
 The full package includes a weight-sensitivity heatmap.
 
+### Install as Python package
+
+```bash
+# Clone and install (works on any computer or Google Colab)
+git clone https://github.com/syedrazaaftab/graph-robustness-score.git
+cd graph-robustness-score
+pip install -e .
+
+# Test it!
+from graph_robustness_score import compute_cg
+import networkx as nx
+
+G = nx.complete_graph(6)  # example graph
+score = compute_cg(G)
+print("C(G) =", score)
+
 Paper
 “Complexity Functionals on Sparse Random Graphs: Spectral Gap, Singular-Value Variance, and Ollivier–Ricci Curvature Contributions”
 Syed Raza Aftab, February 19, 2026
