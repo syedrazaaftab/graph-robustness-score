@@ -63,3 +63,19 @@ Made with ❤️ by Syed Raza Aftab
 Independent Researcher, Princeton Meadows, New Jersey, USA
 MIT License • Feel free to use the score in your own work (commercial or academic).
 Just cite the paper or link back to this repo.
+
+## Install as Python package
+
+```bash
+# Clone and install (editable)
+git clone https://github.com/syedrazaaftab/graph-robustness-score.git
+cd graph-robustness-score
+pip install -e .
+
+# Now use it!
+from graph_robustness_score import compute_cg
+import networkx as nx
+
+G = nx.complete_graph(6)  # example
+score = compute_cg(G)
+print("C(G) =", score)
