@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "graph-robustness-score"
+version = "0.1.0"
+description = "Simple scalar robustness score for networks: spectral gap − singular-value variance + clustering proxy (demo) / Ollivier–Ricci (full)"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Syed Raza Aftab", email = "syedrazaaftab@gmail.com"}
+]
+keywords = ["graph-theory", "robustness", "network-science", "finance", "supply-chain"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+requires-python = ">=3.9"
+dependencies = [
+    "networkx>=3.0",
+    "numpy>=1.20",
+    "scipy>=1.7",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/syedrazaaftab/graph-robustness-score"
+Repository = "https://github.com/syedrazaaftab/graph-robustness-score"
+Demo = "https://graph-robustness-score.streamlit.app"
+
+[tool.setuptools]
+packages = {find = {where = ["src"]}}
