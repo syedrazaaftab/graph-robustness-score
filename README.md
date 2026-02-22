@@ -44,8 +44,6 @@ Quick rules of thumb:
 •  Biological / molecular graphs → increase w₃
 The full package includes a weight-sensitivity heatmap.
 
-### Install as Python package
-
 ```bash
 # Clone and install (works on any computer or Google Colab)
 git clone https://github.com/syedrazaaftab/graph-robustness-score.git
